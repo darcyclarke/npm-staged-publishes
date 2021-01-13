@@ -1,0 +1,25 @@
+name: Staged Publish
+
+on: [push]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --if-present
+          npm test
+      - name: npm pack
+        run: |
+          npm pack
+      - name: Publish to Staging
+        uses: actions/upload-artifact@v2
+        with:
+          name: package-tarball
+          path: |
+            **.tgz
+            
